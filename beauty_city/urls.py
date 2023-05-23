@@ -9,4 +9,5 @@ urlpatterns = [
     path('admin/', admin.site.urls),
     path('', views.index, name='index'),
     path('notes/', views.notes, name='notes'),
+    path('service/', views.view_service, name='service'),
 ] + static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
