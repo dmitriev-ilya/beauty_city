@@ -242,3 +242,21 @@ class Note(models.Model):
 
     def __str__(self):
         return f'{self.pk} - {self.saloon}, {self.master}, {self.service}'
+
+
+class Review(models.Model):
+    created_at = models.DateTimeField(
+        'дата и время создания отзыва',
+        default=timezone.now
+    )
+    text = models.TextField('текст отзыва')
+    raiting = models.PositiveIntegerField(
+        'оценка от 0 до 5',
+        validators=[MaxValueValidator(5)],
+        default=0
+    )
+    note = models.ForeignKey(
+        Note,
+        related_name='notes',
+        on_delete=models.DO_NOTHING
+    )
