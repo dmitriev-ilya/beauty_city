@@ -257,6 +257,6 @@ class Review(models.Model):
     )
     note = models.ForeignKey(
         Note,
-        related_name='notes',
+        related_name='reviews',
         on_delete=models.DO_NOTHING
     )
