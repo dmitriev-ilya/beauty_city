@@ -220,7 +220,7 @@ class Note(models.Model):
     saloon = models.ForeignKey(Saloon, related_name='notes', on_delete=models.DO_NOTHING)
     service = models.ForeignKey(Service, related_name='notes', on_delete=models.DO_NOTHING)
     master = models.ForeignKey(Master, related_name='notes', on_delete=models.DO_NOTHING)
-    payment = models.OneToOneField(Payment, on_delete=models.DO_NOTHING, null=True)
+    payment = models.OneToOneField(Payment, on_delete=models.DO_NOTHING, null=True, blank=True)
     price = models.DecimalField('цена без промо', max_digits=7, decimal_places=2, validators=[MinValueValidator(0)])
     promo = models.ForeignKey(
         Promo,
@@ -260,3 +260,10 @@ class Review(models.Model):
         related_name='reviews',
         on_delete=models.DO_NOTHING
     )
+    
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
+
+    def __str__(self):
+        return f'{self.pk}. {self.note.saloon.name}, {self.note.service.name}, оценка -  {self.raiting}'
