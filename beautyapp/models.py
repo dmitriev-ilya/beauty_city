@@ -19,6 +19,8 @@ class Saloon(models.Model):
     city = models.CharField('город', max_length=100)
     avatar = models.FileField('заглавное фото салона', validators=[validate_svg_file_extension], null=True, blank=True)
     masters = models.ManyToManyField('Master', through='SaloonMaster')
+    opening_time = models.TimeField('время открытия', default='10:00')
+    closing_time = models.TimeField('время закрытия', default='20:00')
 
     class Meta:
         verbose_name = 'салон красоты'

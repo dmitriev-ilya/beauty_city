@@ -12,7 +12,9 @@ def index(request):
             'name': salon.name,
             'city': salon.city,
             'address': salon.address,
-            'image': salon.avatar.url if salon.avatar else None
+            'image': salon.avatar.url if salon.avatar else None,
+            'opening_time': salon.opening_time.strftime("%H:%M"),
+            'closing_time': salon.closing_time.strftime("%H:%M")
         }
         salon_details.append(salon_detail)
 
