@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import F, Value
 from django.db.models.functions import Concat
 from django.utils import timezone
+from dateutil import relativedelta
 
 from .validators import validate_svg_file_extension
 
@@ -91,14 +92,10 @@ class Master(models.Model):
 
     @property
     def work_experience(self):
-        # TODO: сделать точнее
-        experience = (timezone.now().date() - self.start_experience_date)
-        years = experience.days // 365
-        if years:
-            months = (experience.days % years) // 30
-            return f'{years} г. {months} мес.'
-        months = experience.days // 30
-        return f'{months} мес.'
+        work_experience = relativedelta.relativedelta(timezone.now().date(), self.start_experience_date)
+        if work_experience.years:
+            return f'{work_experience.years} г. {work_experience.months} мес.'
+        return f'{work_experience.months} мес.'
 
     class Meta:
         verbose_name = 'мастер'

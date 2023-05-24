@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Saloon, Service
+from .models import Saloon, Service, Master
 
 
 def index(request):
@@ -21,14 +21,27 @@ def index(request):
     for service in services:
         service_detail = {
             'name': service.name,
-            'image': service.avatar.url,
+            'image': service.avatar.url if service.avatar else None,
             'price': round(service.price, 0)
         }
         service_details.append(service_detail)
 
+    masters = Master.objects.all().select_related('speciality')
+    master_details = []
+    for master in masters:
+        master_detail = {
+            'full_name': master.full_name,
+            'avatar': master.avatar.url if master.avatar else None,
+            'review_count': master.review_count,
+            'speciality': master.speciality.name,
+            'work_experience': master.work_experience
+        }
+        master_details.append(master_detail)
+
     context = {
         'salons': salon_details,
-        'services': service_details
+        'services': service_details,
+        'masters': master_details
     }
 
     return render(request, 'index.html', context=context)
