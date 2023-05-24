@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Saloon
+from .models import Saloon, Service
 
 
 def index(request):
@@ -16,8 +16,19 @@ def index(request):
         }
         salon_details.append(salon_detail)
 
+    services = Service.objects.all()
+    service_details = []
+    for service in services:
+        service_detail = {
+            'name': service.name,
+            'image': service.avatar.url,
+            'price': round(service.price, 0)
+        }
+        service_details.append(service_detail)
+
     context = {
-        'salons': salon_details
+        'salons': salon_details,
+        'services': service_details
     }
 
     return render(request, 'index.html', context=context)
