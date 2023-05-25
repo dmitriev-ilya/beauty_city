@@ -1,6 +1,7 @@
 from django.shortcuts import render
+from django.utils import timezone
 
-from .models import Saloon, Service, Master, Review
+from .models import Saloon, Service, Master, Review, Note
 
 
 def index(request):
@@ -62,7 +63,34 @@ def index(request):
 
 
 def notes(request):
-    return render(request, 'notes.html')
+    notes = Note.objects.all().select_related('service', 'saloon', 'payment', 'master')
+    note_details = []
+    total_price = 0
+    for note in notes:
+        payment_status = 'НЕОПЛАЧЕНО'
+        if note.payment and note.payment.status == 'Оплачен':
+            payment_status = 'ОПЛАЧЕНО'
+        note_detail = {
+            'note_id': note.pk,
+            'service_image': note.service.avatar.url,
+            'notes__main_address': note.saloon.address,
+            'note_payment_status': payment_status,
+            'note_service_name': note.service.name,
+            'note_master_name': note.master.full_name,
+            'note_service_price': round(note.price, 0),
+            'note_date_time': f'{note.date.strftime("%d.%m")} - {note.stime.strftime("%H:%M")}',
+            'note_time_position': 'ПРОШЕДШИЕ' if (timezone.now().date() > note.date and timezone.now().time() > note.stime) else 'ПРЕДСТОЯЩИЕ'
+        }
+        note_details.append(note_detail)
+        if payment_status == 'НЕОПЛАЧЕНО':
+            total_price += note_detail['note_service_price']
+
+    context = {
+        'notes': note_details,
+        'total_price': round(total_price, 0)
+    }
+
+    return render(request, 'notes.html', context)
 
 
 def view_service(request):
