@@ -80,6 +80,7 @@
 						</ul>
 					</nav>
 					</div>
+					{% if not request.user.is_authenticated %}
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
 						<a href="tel:+79179023800"><button class="header__block_btn">Перезвоните мне</button></a>
@@ -88,6 +89,14 @@
 							<span class="header__block_auth__intro">Войти</span>
 						</div>
 					</div>
+					{% else %}
+					<div class="col-2 col-md-2 col-lg-3">
+						<div class="header__block">
+							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
+							<span class="header__block_auth__intro">{{ user }}</span>
+						</div>
+					</div>
+					{% endif %}
 					</div>
 				</div>
 				
@@ -177,9 +186,10 @@
 			<div class="box-modal_close arcticmodal-close"><img src="{% static 'img/x.svg' %}" alt="x"></div>
 			<div class="popup__title authPopup__title">Войти по коду</div>
 			<p class="popup__text authPopup__text">Введите свой номер телефона, мы вышлем на него код</p>
-			<form action="#" class="authPopup__form">
+			<form method="post" class="authPopup__form" id="auth-form">
+				{% csrf_token %}
 				<div class="contacts__form_inputBlock">
-					<input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required="">
+					<input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
 				</div>
 				<div class="contacts__form_checkboxBlock fic">
 					<input type="checkbox" class="contacts__form_checkbox" checked="">
@@ -195,11 +205,11 @@
 			<div class="popup__title confirmPopup__title">Подтвердите номер</div>
 			<p class="popup__text confirmPopup__text">Введите код, полученный по SMS на номер +7 (928) 164 48 60</p>
 			<div class="confirmPopup__number">
-				<input type="text" name="num1" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
-				<input type="text" name="num2" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
-				<input type="text" name="num3" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
-				<input type="text" name="num4" class="tipsPopup__form_inputNum popup__input" placeholder="" required="">
-
+				<input type="text" name="num1" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
+				<input type="text" name="num2" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
+				<input type="text" name="num3" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
+				<input type="text" name="num4" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
+	
 			</div>
 			<div class="confirmPopup__sms">Если SMS не пришло вы можете <a href="#" class="popup__link">запросить код повторно</a></div>
 			<div class="confirmPopup__changeNumber">
@@ -213,5 +223,58 @@
 	<script src="{% static 'js/air-datepicker.js' %}"></script>
 	<script src="{% static 'js/jquery.arcticmodal-0.3.min.js' %}"></script>
 	<script src="{% static 'js/main.js' %}"></script>
+	<script>
+		const form = document.querySelector('#auth-form');
+		if (form) {
+		form.addEventListener('submit', (event) => {
+			event.preventDefault();
+
+			const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+			const tel = form.tel.value.trim();
+			let data = {'tel': tel};
+			fetch("{% url 'index' %}", {
+					headers: {
+						'X-CSRFToken': '{{ csrf_token }}',
+					},
+					method: 'POST',
+					body: JSON.stringify(data),
+				})
+
+			const inputNums = document.querySelectorAll('input[name^="num"]');
+			for (let i = 0; i < inputNums.length; i++) {
+			inputNums[i].addEventListener('input', () => {
+				const code = Array.from(inputNums).map(el => el.value).join('');
+				let data = {
+					'code': code,
+					'tel': tel
+				};
+
+				if (code.length === 4) {
+				fetch("{% url 'index' %}", {
+					headers: {
+						'X-CSRFToken': '{{ csrf_token }}',
+					},
+					method: 'POST',
+					body: JSON.stringify(data),
+				})
+				.then(response => response.json())
+				.then(data => {
+					if (data.success) {
+						alert('Вы успешно вошли в систему!');
+						const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+						console.log('Начало выполнения');
+						sleep(1000);
+						window.location.href = '/';
+					} else {
+						alert('Ошибка входа в систему');
+					}
+				})
+				.catch(error => console.error(error));
+				}
+			});
+			}
+		});
+		}
+	</script>
 </body>
 </html>
