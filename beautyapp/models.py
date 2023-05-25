@@ -6,6 +6,7 @@ from django.db import models
 from django.db.models import F, Value
 from django.db.models.functions import Concat
 from django.utils import timezone
+from dateutil import relativedelta
 
 from .validators import validate_svg_file_extension
 
@@ -18,6 +19,8 @@ class Saloon(models.Model):
     city = models.CharField('город', max_length=100)
     avatar = models.FileField('заглавное фото салона', validators=[validate_svg_file_extension], null=True, blank=True)
     masters = models.ManyToManyField('Master', through='SaloonMaster')
+    opening_time = models.TimeField('время открытия', default='10:00')
+    closing_time = models.TimeField('время закрытия', default='20:00')
 
     class Meta:
         verbose_name = 'салон красоты'
@@ -91,14 +94,10 @@ class Master(models.Model):
 
     @property
     def work_experience(self):
-        # TODO: сделать точнее
-        experience = (timezone.now().date() - self.start_experience_date)
-        years = experience.days // 365
-        if years:
-            months = (experience.days % years) // 30
-            return f'{years} г. {months} мес.'
-        months = experience.days // 30
-        return f'{months} мес.'
+        work_experience = relativedelta.relativedelta(timezone.now().date(), self.start_experience_date)
+        if work_experience.years:
+            return f'{work_experience.years} г. {work_experience.months} мес.'
+        return f'{work_experience.months} мес.'
 
     class Meta:
         verbose_name = 'мастер'
@@ -221,7 +220,7 @@ class Note(models.Model):
     saloon = models.ForeignKey(Saloon, related_name='notes', on_delete=models.DO_NOTHING)
     service = models.ForeignKey(Service, related_name='notes', on_delete=models.DO_NOTHING)
     master = models.ForeignKey(Master, related_name='notes', on_delete=models.DO_NOTHING)
-    payment = models.OneToOneField(Payment, on_delete=models.DO_NOTHING, null=True)
+    payment = models.OneToOneField(Payment, on_delete=models.DO_NOTHING, null=True, blank=True)
     price = models.DecimalField('цена без промо', max_digits=7, decimal_places=2, validators=[MinValueValidator(0)])
     promo = models.ForeignKey(
         Promo,
@@ -243,3 +242,28 @@ class Note(models.Model):
 
     def __str__(self):
         return f'{self.pk} - {self.saloon}, {self.master}, {self.service}'
+
+
+class Review(models.Model):
+    created_at = models.DateTimeField(
+        'дата и время создания отзыва',
+        default=timezone.now
+    )
+    text = models.TextField('текст отзыва')
+    raiting = models.PositiveIntegerField(
+        'оценка от 0 до 5',
+        validators=[MaxValueValidator(5)],
+        default=0
+    )
+    note = models.ForeignKey(
+        Note,
+        related_name='reviews',
+        on_delete=models.DO_NOTHING
+    )
+    
+    class Meta:
+        verbose_name = 'отзыв'
+        verbose_name_plural = 'отзывы'
+
+    def __str__(self):
+        return f'{self.pk}. {self.note.saloon.name}, {self.note.service.name}, оценка -  {self.raiting}'

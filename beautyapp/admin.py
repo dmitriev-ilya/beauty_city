@@ -11,6 +11,7 @@ from .models import Promo
 from .models import SaloonMaster
 from .models import SaloonMasterWeekday
 from .models import Note
+from .models import Review
 
 
 @admin.register(Saloon)
@@ -69,4 +70,8 @@ class SaloonMasterWeekdayAdmin(admin.ModelAdmin):
 
 @admin.register(Note)
 class MasterSpecialityAdmin(admin.ModelAdmin):
+    pass
+
+@admin.register(Review)
+class ReviewAdmin(admin.ModelAdmin):
     pass
