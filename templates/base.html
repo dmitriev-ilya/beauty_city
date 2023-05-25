@@ -80,6 +80,7 @@
 						</ul>
 					</nav>
 					</div>
+					{% if not request.user.is_authenticated %}
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
 						<a href="tel:+79179023800"><button class="header__block_btn">Перезвоните мне</button></a>
@@ -88,6 +89,14 @@
 							<span class="header__block_auth__intro">Войти</span>
 						</div>
 					</div>
+					{% else %}
+					<div class="col-2 col-md-2 col-lg-3">
+						<div class="header__block">
+							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
+							<span class="header__block_auth__intro">{{ user }}</span>
+						</div>
+					</div>
+					{% endif %}
 					</div>
 				</div>
 				
@@ -249,12 +258,21 @@
 					body: JSON.stringify(data),
 				})
 				.then(response => response.json())
-				.then(data => console.log(data))
+				.then(data => {
+					if (data.success) {
+						alert('Вы успешно вошли в систему!');
+						const sleep = ms => new Promise(resolve => setTimeout(resolve, ms));
+						console.log('Начало выполнения');
+						sleep(1000);
+						window.location.href = '/';
+					} else {
+						alert('Ошибка входа в систему');
+					}
+				})
 				.catch(error => console.error(error));
 				}
 			});
 			}
-
 		});
 		}
 	</script>
