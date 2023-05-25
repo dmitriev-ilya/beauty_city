@@ -223,39 +223,38 @@
 			const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 			const tel = form.tel.value.trim();
 			let data = {'tel': tel};
-
-			console.log(data);
 			fetch("{% url 'index' %}", {
-				headers: {
-					'X-CSRFToken': '{{ csrf_token }}',
-					'Accept': 'application/json',
-					'Content-Type': 'application/json'
-				},
-				method: 'POST',
-				body: JSON.stringify(data),
-			})
-		});
-		}
+					headers: {
+						'X-CSRFToken': '{{ csrf_token }}',
+					},
+					method: 'POST',
+					body: JSON.stringify(data),
+				})
 
-		const inputNums = document.querySelectorAll('input[name^="num"]');
-		for (let i = 0; i < inputNums.length; i++) {
-		inputNums[i].addEventListener('input', () => {
-			const code = Array.from(inputNums).map(el => el.value).join('');
-			let data = {'code': code};
-			console.log(data);
+			const inputNums = document.querySelectorAll('input[name^="num"]');
+			for (let i = 0; i < inputNums.length; i++) {
+			inputNums[i].addEventListener('input', () => {
+				const code = Array.from(inputNums).map(el => el.value).join('');
+				let data = {
+					'code': code,
+					'tel': tel
+				};
 
-			if (code.length === 4) {
-			fetch("{% url 'index' %}", {
-				headers: {
-					'X-CSRFToken': '{{ csrf_token }}',
-				},
-				method: 'POST',
-				body: JSON.stringify(data),
-			})
-			.then(response => response.json())
-			.then(data => console.log(data))
-			.catch(error => console.error(error));
+				if (code.length === 4) {
+				fetch("{% url 'index' %}", {
+					headers: {
+						'X-CSRFToken': '{{ csrf_token }}',
+					},
+					method: 'POST',
+					body: JSON.stringify(data),
+				})
+				.then(response => response.json())
+				.then(data => console.log(data))
+				.catch(error => console.error(error));
+				}
+			});
 			}
+
 		});
 		}
 	</script>

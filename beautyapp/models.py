@@ -1,16 +1,37 @@
 from decimal import Decimal
 
-from django.contrib.auth import get_user_model
+from django.contrib.auth.models import AbstractUser
 from django.core.validators import MinValueValidator, MaxValueValidator
 from django.db import models
 from django.db.models import F, Value
 from django.db.models.functions import Concat
 from django.utils import timezone
+from phonenumber_field.modelfields import PhoneNumberField
 
 from .validators import validate_svg_file_extension
 
 
-User = get_user_model()
+class User(AbstractUser):
+    phone_number = PhoneNumberField(
+        null=True,
+        blank=True
+    )
+    code = models.IntegerField(
+        null=True,
+        blank=True,
+        validators=[
+            MinValueValidator(0),
+            MaxValueValidator(9999)
+        ]
+    )
+
+    class Meta:
+        verbose_name = 'Пользователь'
+        verbose_name_plural = 'Пользователи'
+
+    def __str__(self):
+        return self.username
+
 
 class Saloon(models.Model):
     name = models.CharField('название', max_length=100)

@@ -11,6 +11,12 @@ from .models import Promo
 from .models import SaloonMaster
 from .models import SaloonMasterWeekday
 from .models import Note
+from .models import User
+
+
+@admin.register(User)
+class UserAdmin(admin.ModelAdmin):
+    pass
 
 
 @admin.register(Saloon)

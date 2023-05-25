@@ -15,6 +15,8 @@ ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', ['127.0.0.1', 'localhost'], delimiter=
 
 SMS_KEY = env.str('SMS_KEY')
 
+AUTH_USER_MODEL = 'beautyapp.User'
+
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
