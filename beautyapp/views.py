@@ -40,12 +40,22 @@ def index(request):
         }
         master_details.append(master_detail)
 
-    reviews = Review.objects.filter(raiting__gte=4)
+    reviews = Review.objects.filter(raiting__gte=4).select_related('note__user')
+    review_details = []
+    for review in reviews:
+        review_detail = {
+            'user_name': review.note.user.username,
+            'text': review.text,
+            'raiting': review.raiting,
+            'date': review.created_at.strftime("%d.%m.%Y")
+        }
+        review_details.append(review_detail)
 
     context = {
         'salons': salon_details,
         'services': service_details,
-        'masters': master_details
+        'masters': master_details,
+        'reviews': review_details
     }
 
     return render(request, 'index.html', context=context)
