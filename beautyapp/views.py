@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Saloon, Service, Master
+from .models import Saloon, Service, Master, Review
 
 
 def index(request):
@@ -39,6 +39,8 @@ def index(request):
             'work_experience': master.work_experience
         }
         master_details.append(master_detail)
+
+    reviews = Review.objects.filter(raiting__gte=4)
 
     context = {
         'salons': salon_details,
