@@ -209,7 +209,7 @@
 		<div class="box-modal confirmPopup popup" id="confirmModal">
 			<div class="box-modal_close arcticmodal-close"><img src="{% static 'img/x.svg' %}" alt="x"></div>
 			<div class="popup__title confirmPopup__title">Подтвердите номер</div>
-			<p class="popup__text confirmPopup__text">Введите код, полученный по SMS на номер +7 (928) 164 48 60</p>
+			<p class="popup__text confirmPopup__text">Введите код, полученный по SMS на номер <div id="tel"></div></p>
 			<div class="confirmPopup__number">
 				<input type="text" name="num1" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
 				<input type="text" name="num2" class="tipsPopup__form_inputNum popup__input" placeholder="" required maxlength="1">
@@ -238,6 +238,7 @@
 
 			const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 			const tel = form.tel.value.trim();
+			document.getElementById("tel").textContent = tel;
 			let data = {'tel': tel};
 			fetch("{% url 'my_view' %}", {
 					headers: {
