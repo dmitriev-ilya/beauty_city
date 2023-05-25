@@ -93,7 +93,13 @@
 					<div class="col-2 col-md-2 col-lg-3">
 						<div class="header__block">
 							<img src="{% static 'img/acc.svg' %}" alt="account" class="header__account_img">
-							<span class="header__block_auth__intro">{{ user }}</span>
+							<span class="header__block_auth__intro">
+								{{ user }}
+								<form action="{% url 'logout_view' %}" method="POST">
+									{% csrf_token %}
+									<button type="submit" class="btn btn-outline-primary">Выход</button>
+								</form>
+							</span>
 						</div>
 					</div>
 					{% endif %}
@@ -186,7 +192,7 @@
 			<div class="box-modal_close arcticmodal-close"><img src="{% static 'img/x.svg' %}" alt="x"></div>
 			<div class="popup__title authPopup__title">Войти по коду</div>
 			<p class="popup__text authPopup__text">Введите свой номер телефона, мы вышлем на него код</p>
-			<form method="post" class="authPopup__form" id="auth-form">
+			<form method="post" action="{% url 'my_view' %}" class="authPopup__form" id="auth-form">
 				{% csrf_token %}
 				<div class="contacts__form_inputBlock">
 					<input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
@@ -229,12 +235,13 @@
 		form.addEventListener('submit', (event) => {
 			event.preventDefault();
 
+
 			const csrftoken = document.querySelector('[name=csrfmiddlewaretoken]').value;
 			const tel = form.tel.value.trim();
 			let data = {'tel': tel};
-			fetch("{% url 'index' %}", {
+			fetch("{% url 'my_view' %}", {
 					headers: {
-						'X-CSRFToken': '{{ csrf_token }}',
+						'X-CSRFToken': csrftoken,
 					},
 					method: 'POST',
 					body: JSON.stringify(data),
@@ -250,9 +257,9 @@
 				};
 
 				if (code.length === 4) {
-				fetch("{% url 'index' %}", {
+				fetch("{% url 'my_view' %}", {
 					headers: {
-						'X-CSRFToken': '{{ csrf_token }}',
+						'X-CSRFToken': csrftoken,
 					},
 					method: 'POST',
 					body: JSON.stringify(data),

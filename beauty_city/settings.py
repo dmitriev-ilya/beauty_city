@@ -23,7 +23,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'beautyapp.apps.BeautyappConfig',
-    'users.apps.UsersConfig',
+    'users',
     'phonenumber_field',
 ]
 
