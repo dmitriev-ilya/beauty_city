@@ -1,9 +1,10 @@
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Saloon, Service, Master, ServiceGroup
-from .models import Saloon, Service, Master, Review, Note
 from django.contrib.auth.decorators import login_required
+from .models import Saloon, Service, Master, ServiceGroup
+from .models import Review, Note
+
 
 def index(request):
     salons = Saloon.objects.all()
