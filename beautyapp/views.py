@@ -1,8 +1,9 @@
 from django.shortcuts import render
 from django.utils import timezone
 
+from django.contrib.auth.decorators import login_required
 from .models import Saloon, Service, Master, ServiceGroup
-from .models import Saloon, Service, Master, Review, Note
+from .models import Review, Note
 
 
 def index(request):
@@ -63,8 +64,10 @@ def index(request):
     return render(request, 'index.html', context=context)
 
 
+@login_required
 def notes(request):
-    notes = Note.objects.all().select_related('service', 'saloon', 'payment', 'master')
+    user = request.user
+    notes = Note.objects.filter(user=user).select_related('service', 'saloon', 'payment', 'master')
     note_details = []
     total_price = 0
     for note in notes:
