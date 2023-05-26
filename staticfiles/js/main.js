@@ -174,8 +174,6 @@ $(document).ready(function() {
 		console.log(thisId)
 
 		$(this).parent().parent().parent().parent().find('> button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-		// $(this).parent().parent().parent().parent().find('> button.active').click()
-		// $(this).parent().parent().parent().addClass('hide')
 		setTimeout(() => {
 			$(this).parent().parent().parent().parent().find('> button.active').click()
 		}, 200)
@@ -204,40 +202,46 @@ $(document).ready(function() {
 		$(this).append(`<input hidden='true' name='master_id' value='${thisId}' />`)
 	})
 
-	// 	console.log($('.service__masters > .panel').attr('data-masters'))
-	// if($('.service__salons .accordion.selected').text() === "BeautyCity Пушкинская  ул. Пушкинская, д. 78А") {
-	// }
+	//service
+	$('.time__items .time__elems_elem .time__elems_btn').click(function(e) {
+		e.preventDefault()
+		thisTime = $(this).text()
+		$('.time__elems_btn').removeClass('active')
+		$(this).addClass('active')
+		
+		console.log((document.querySelectorAll('[id=input_time]')).length)
+		
+		$(this).append(`<input id='input_time' hidden='true' name='time' value='${thisTime}' />`)
+		console.log(thisTime)
+		if (((document.querySelectorAll('[id=input_time]')).length) > 1)  {
+			document.getElementById('input_time').remove()
+		} 
+	})
+
+	
+	$('.air-datepicker .air-datepicker--content .air-datepicker-body .air-datepicker-body--cells .air-datepicker-cell').click(function(e) {
+		thisDate = (this.getAttribute('data-year') + '-' + this.getAttribute('data-month')+ '-' + this.getAttribute('data-date'))
+	
+		console.log(thisDate)
+	
+		if (((document.querySelectorAll('[id=input_date]')).length) > 1)  {
+			document.getElementById('input_date').remove()
+		} 
+		$(this).append(`<input id='input_date' hidden='true' name='date' value='${thisDate}' />`)
+	})
 
 
- 
-	 
-		console.log($(this).parent().parent().parent().parent())
-	// 	$(this).parent().parent().parent().parent().find('button.active').addClass('selected').text(thisName + '  ' +thisAddress)
-	// })
-
-
-
-	// $('.accordion__block_item').click(function(e) {
-	// 	const thisChildName = $(this).text()
-	// 	console.log(thisChildName)
-	// 	console.log($(this).parent().parent().parent())
-	// 	$(this).parent().parent().parent().parent().parent().find('button.active').addClass('selected').text(thisChildName)
-
-	// })
-	// $('.accordion.selected').click(function() {
-	// 	$(this).parent().find('.panel').hasClass('selected') ? 
-	// 	 $(this).parent().find('.panel').removeClass('selected')
-	// 		:
-	// 	$(this).parent().find('.panel').addClass('selected')
-	// })
-
+	$(document).on('click', '.servicePage', function() {
+		if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__masters').hasClass('selected')) {
+			$('.time__btns_next').addClass('active')
+		}
+	})
 
 	//popup
 	$('.header__block_auth').click(function(e) {
 		e.preventDefault()
 		$('#authModal').arcticmodal();
 		// $('#confirmModal').arcticmodal();
-
 	})
 
 	$('.rewiewPopupOpen').click(function(e) {
@@ -258,19 +262,7 @@ $(document).ready(function() {
 		return false
 	})
 
-	//service
-	$('.time__items .time__elems_elem .time__elems_btn').click(function(e) {
-		e.preventDefault()
-		$('.time__elems_btn').removeClass('active')
-		$(this).addClass('active')
-		// $(this).hasClass('active') ? $(this).removeClass('active') : $(this).addClass('active')
-	})
 
-	$(document).on('click', '.servicePage', function() {
-		if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__form_block > button').hasClass('selected')) {
-			$('.time__btns_next').addClass('active')
-		}
-	})
 	
 
 
