@@ -1,8 +1,10 @@
 from django.shortcuts import render
 from django.utils import timezone
 
-from .models import Saloon, Service, Master, Review, Note
 from django.contrib.auth.decorators import login_required
+from .models import Saloon, Service, Master, ServiceGroup
+from .models import Review, Note
+
 
 def index(request):
     salons = Saloon.objects.all()
@@ -96,4 +98,18 @@ def notes(request):
 
 
 def view_service(request):
-    return render(request, 'service.html')
+    saloons = Saloon.objects.all()
+    service_groups = ServiceGroup.objects.all()
+    masters = Master.objects.all()
+    print(masters)
+    context = {
+        'saloons': saloons,
+        'service_groups': service_groups,
+        'masters': masters
+    }
+    return render(request, 'service.html', context=context)
+
+
+def view_service_final(request):
+    return render(request, 'serviceFinally.html', {})
+
