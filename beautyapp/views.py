@@ -1,6 +1,6 @@
 from django.shortcuts import render
 
-from .models import Saloon, Service, Master
+from .models import Saloon, Service, Master, ServiceGroup
 
 
 def index(request):
@@ -54,4 +54,18 @@ def notes(request):
 
 
 def view_service(request):
-    return render(request, 'service.html')
+    saloons = Saloon.objects.all()
+    service_groups = ServiceGroup.objects.all()
+    masters = Master.objects.all()
+    print(masters)
+    context = {
+        'saloons': saloons,
+        'service_groups': service_groups,
+        'masters': masters
+    }
+    return render(request, 'service.html', context=context)
+
+
+def view_service_final(request):
+    return render(request, 'serviceFinally.html', {})
+
