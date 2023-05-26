@@ -11,6 +11,7 @@
 - `DEBUG` — дебаг-режим. Поставьте `True`, чтобы увидеть отладочную информацию в случае ошибки. Выключается значением `False`.
 - `DJANGO_SECRET_KEY` — секретный ключ проекта. Например: `django-insecure-1*-ds=k=@f#!ew8mf60nm23t6!tlvipb6i5r-153x)s@v(m59^`.
 - `ALLOWED_HOSTS` — см [документацию Django](https://docs.djangoproject.com/en/3.1/ref/settings/#allowed-hosts).
+- `SMS_KEY` - можно получить [здесь](https://sms.ru/)
 
 4. Создайте базу данных SQLite командой `python3 manage.py migrate`
 5. Запустите сервер командой `python3 manage.py runserver`

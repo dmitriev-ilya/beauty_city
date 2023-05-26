@@ -260,10 +260,11 @@ class Review(models.Model):
         related_name='reviews',
         on_delete=models.DO_NOTHING
     )
-    
+
     class Meta:
         verbose_name = 'отзыв'
         verbose_name_plural = 'отзывы'
+        ordering = ['-created_at']
 
     def __str__(self):
-        return f'{self.pk}. {self.note.saloon.name}, {self.note.service.name}, оценка -  {self.raiting}'
+        return f'{self.note.saloon.name}, {self.note.service.name}, оценка -  {self.raiting}'
