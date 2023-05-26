@@ -1,4 +1,4 @@
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
@@ -101,7 +101,6 @@ def view_service(request):
     saloons = Saloon.objects.all()
     service_groups = ServiceGroup.objects.all()
     masters = Master.objects.all()
-    print(masters)
     context = {
         'saloons': saloons,
         'service_groups': service_groups,
@@ -111,5 +110,34 @@ def view_service(request):
 
 
 def view_service_final(request):
-    return render(request, 'serviceFinally.html', {})
+    saloon_id = request.GET.get('saloon_id')
+    service_id = request.GET.get('service_id')
+    master_id = request.GET.get('master_id')
+    time = request.GET.get('time')
+    date = request.GET.get('date')
+    saloon = Saloon.objects.get(id=saloon_id)
+    service = Service.objects.get(id=service_id)
+    master = Master.objects.get(id=master_id)
+
+    if request.POST:
+        Note.objects.get_or_create(
+            user=request.user,
+            saloon=saloon,
+            service=service,
+            master=master,
+            price=service.price,
+            date=date,
+            stime=time,
+            etime=time,
+        )
+        return redirect('notes')
+
+    context = {
+        'saloon': saloon,
+        'service': service,
+        'master': master,
+        'time': time,
+        'date': date,
+    }
+    return render(request, 'serviceFinally.html', context=context)
 
