@@ -4,7 +4,7 @@ import random
 from .send_sms import send_auth_sms
 from beauty_city.settings import SMS_KEY
 
-from django.shortcuts import render
+from django.shortcuts import render, redirect
 from django.http import HttpResponse
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
@@ -14,7 +14,7 @@ from django.contrib.auth.hashers import make_password
 
 
 @csrf_exempt
-def my_view(request):
+def entrance(request):
     if request.method == 'POST':
         if not request.POST:
             body_data = json.loads(request.body)
@@ -41,9 +41,9 @@ def my_view(request):
                 else:
                     return JsonResponse({'success': False}, status=403)
 
-    return HttpResponse(status=201)
+    return redirect('index')
 
 
 def logout_view(request):
     logout(request)
-    return render(request, 'index.html')
+    return redirect('index')
