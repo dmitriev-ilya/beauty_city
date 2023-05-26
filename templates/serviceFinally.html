@@ -10,12 +10,12 @@
 				<div class="row">
 					<div class="col-md-6 col-lg-6">
 						<div class="breadCrumbs">
-							<a href="#" class="breadCrumbs__item">На главную</a>
+              <a href="{% url 'index' %}" class="breadCrumbs__item">На главную</a>
 						</div>
 						<div class="service__block">
 							<h1 class="service__title">Запись на услугу</h1>
 						</div>
-            <form action="{% url 'notes' %}" class="serviceFinally__form" method="post">
+            <form action="" class="serviceFinally__form" method="post">
               {% csrf_token %}
 							<div class="serviceFinally__form_block">
 								<div class="serviceFinally__form_header fic">
@@ -48,8 +48,8 @@
 									<input type="checkbox" class="contacts__form_checkbox" checked="">
 									<span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфиденциальности</span>
 								</div>
-								<button type="submit" class="serviceFinallys__form_btn">Записаться</button>
-								<button type="submit" class="serviceFinallys__form_back">Назад</button>
+                <button type="submit" class="serviceFinallys__form_btn">Записаться</button>
+                <a href="{% url 'index' %}" ><button class="serviceFinallys__form_back">Назад</button></a>
 							</div>
 						</form>	
 					</div>
