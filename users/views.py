@@ -5,7 +5,7 @@ from .send_sms import send_auth_sms
 from beauty_city.settings import SMS_KEY
 
 from django.shortcuts import render, redirect
-from django.http import HttpResponse
+from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login, logout
 from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
@@ -38,12 +38,21 @@ def entrance(request):
                 if user:
                     login(request, user)
                     return JsonResponse({'success': True}, status=200)
-                else:
-                    return JsonResponse({'success': False}, status=403)
+
+                return JsonResponse({'success': False}, status=403)
 
     return redirect('index')
 
 
 def logout_view(request):
     logout(request)
-    return redirect('index')
+    return render(request, 'index.html')
+
+
+def is_employee(user):
+    return user.is_staff
+
+
+@user_passes_test(is_employee)
+def employee_view(request):
+    return render(request, 'manager.html')
