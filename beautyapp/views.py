@@ -140,15 +140,16 @@ def view_service_final(request):
     date = request.GET.get('date')
 
     phone_number = request.GET.get('tel')
-    code = str(random.randint(1000, 9999))
-    User.objects.get_or_create(
-        username=phone_number,
-        defaults={
-            'password': make_password(code),
-        }
-    )
-    user = User.objects.get(username=phone_number)
-
+    user = request.user
+    if phone_number:
+        code = str(random.randint(1000, 9999))
+        User.objects.get_or_create(
+            username=phone_number,
+            defaults={
+                'password': make_password(code),
+            }
+        )
+        user = User.objects.get(username=phone_number)
     saloon = Saloon.objects.get(id=saloon_id)
     service = Service.objects.get(id=service_id)
     master = Master.objects.get(id=master_id)
