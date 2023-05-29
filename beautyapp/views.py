@@ -1,9 +1,13 @@
+import random
+
 from django.shortcuts import render, redirect
 from django.utils import timezone
 
+from django.views.decorators.csrf import csrf_exempt
+from django.contrib.auth.hashers import make_password
 from django.contrib.auth.decorators import login_required
 from .models import Saloon, Service, Master, ServiceGroup
-from .models import Review, Note, Payment
+from .models import Review, Note, Payment, User
 
 
 def index(request):
@@ -127,19 +131,31 @@ def view_service(request):
     return render(request, 'service.html', context=context)
 
 
+@csrf_exempt
 def view_service_final(request):
     saloon_id = request.GET.get('saloon_id')
     service_id = request.GET.get('service_id')
     master_id = request.GET.get('master_id')
     time = request.GET.get('time')
     date = request.GET.get('date')
+
+    phone_number = request.GET.get('tel')
+    code = str(random.randint(1000, 9999))
+    User.objects.get_or_create(
+        username=phone_number,
+        defaults={
+            'password': make_password(code),
+        }
+    )
+    user = User.objects.get(username=phone_number)
+
     saloon = Saloon.objects.get(id=saloon_id)
     service = Service.objects.get(id=service_id)
     master = Master.objects.get(id=master_id)
 
     if request.POST:
         Note.objects.get_or_create(
-            user=request.user,
+            user=user,
             saloon=saloon,
             service=service,
             master=master,
@@ -148,7 +164,9 @@ def view_service_final(request):
             stime=time,
             etime=time,
         )
-        return redirect('notes')
+        if request.user.is_authenticated:
+            return redirect('notes')
+        return redirect('index')
 
     context = {
         'saloon': saloon,
