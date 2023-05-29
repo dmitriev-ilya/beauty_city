@@ -186,10 +186,6 @@
 												<div class="notes__main_address">{{ note.notes__main_address }}</div>
 											</div>
 											{% if note.note_payment_status == 'НЕОПЛАЧЕНО' %}
-                        <button class="notes__footer_btn payPopupOpen">
-                          <input id="id_note" hidden="true" name="note_id" value="{{ note.note_id }}" />
-                          Оплатить
-                        </button>
                         <div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
 											{% else %}
 												<div class="notes__main_pay payid">ОПЛАЧЕНО</div>
@@ -222,9 +218,10 @@
 											<a href="#" class="notes__footer_link rewiewPopupOpen">Оставить отзыв</a>
 											<a href="#" class="notes__footer_link tipsPopupOpen">Чаевые</a>							    			
 											{% if note.note_payment_status == 'НЕОПЛАЧЕНО' %}
-												<button class="notes__footer_btn payPopupOpen">
-                          <input id="note_id" hidden="true" name="note_id" value="{{ note.note_id }}" />
-                          Оплатить</button>
+                        <button class="notes__footer_btn payPopupOpen">
+                          <input id="id_note" hidden="true" name="note_id" value="{{ note.note_id }}" />
+                          Оплатить
+                        </button>
 												<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
 											{% else %}
 												<div class="notes__main_pay payid">ОПЛАЧЕНО</div>

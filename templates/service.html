@@ -21,9 +21,12 @@
             </a>
           </div>
             <div class="saloon__form_block service__saloons">
-              <div class="contacts__form_inputBlock">
-                <input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
-              </div>
+              {% if user.is_anonymous %}
+                <div class="contacts__form_inputBlock">
+                  <input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
+                
+                </div>
+              {% endif %}
               <button class="accordion">(Выберите салон)</button>
               <div class="panel">
                 {% for saloon in saloons %}
