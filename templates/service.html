@@ -7,7 +7,7 @@
     <script src="{% static 'js/air-datepicker.js' %}"></script>
 {% endblock %}
 {% block content %}
-  <form action="{% url 'service-final' %}" class="service__form" method="get">
+  <form action="{% url 'service-final' %}" class="service__form">
     <section id="service">
       <div class="container">
         <div class="service">
@@ -16,7 +16,7 @@
           </div>
           <div class="service__block">
             <h1 class="service__title">Запись на услугу</h1>
-            <button class="service__btn btn">Запись по телефону</button>
+            <button  type="button" class="service__btn btn">Запись по телефону</button>
           </div>
             <div class="saloon__form_block service__saloons">
               <button class="accordion">(Выберите салон)</button>
@@ -108,13 +108,13 @@
               </div>
             </div>
           </div>
-          <div class="time__btns">
+          <div id="btns" hidden="True" class="time__btns">
             <div class="row">
               <div class="col-md-12">
-                <button type="submit" class="time__btns_next active">Далее</button>
-                <a  href="{% url 'index' %}" class="time__btns_home">
-                  На главную
-                </a>
+                <button  id="btn_next" class="time__btns_next">Далее</button>
+                <button type="button" class="time__btns_home" onclick="location.href='{% url 'index' %}'">На главную</button>
+          </div>
+
               </div>
             </div>
           </div>
