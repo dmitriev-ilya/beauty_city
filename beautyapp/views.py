@@ -3,7 +3,7 @@ from django.utils import timezone
 
 from django.contrib.auth.decorators import login_required
 from .models import Saloon, Service, Master, ServiceGroup
-from .models import Review, Note
+from .models import Review, Note, Payment
 
 
 def index(request):
@@ -67,6 +67,22 @@ def index(request):
 @login_required
 def notes(request):
     user = request.user
+    if request.POST:
+        tel = request.GET.get('tel')
+        mm = request.GET.get('mm')
+        gg = request.GET.get('gg')
+        fname = request.GET.get('fname')
+        cvc = request.GET.get('cvc')
+        payment = Payment.objects.create(
+            user=request.user,
+            paid_at=timezone.now(),
+            status='Оплачен'
+        )
+        Note.objects.update(
+            user=user,
+            payment=payment
+        )
+
     notes = Note.objects.filter(user=user).select_related('service', 'saloon', 'payment', 'master')
     note_details = []
     total_price = 0
@@ -140,4 +156,3 @@ def view_service_final(request):
         'date': date,
     }
     return render(request, 'serviceFinally.html', context=context)
-
