@@ -231,9 +231,12 @@ $(document).ready(function() {
 	})
 
 
-	$(document).on('click', '.servicePage', function() {
-		if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__masters').hasClass('selected')) {
+	$(document).on('click',  function() {
+    if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__masters > button').hasClass('selected') && $('.service__services > button').hasClass('selected')&& $('.service__saloons > button').hasClass('selected')) {
 			$('.time__btns_next').addClass('active')
+		  thisButtons = document.getElementById('btns')      
+      console.log(thisButtons)
+      thisButtons.removeAttribute('hidden')
 		}
 	})
 
