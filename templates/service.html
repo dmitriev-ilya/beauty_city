@@ -21,6 +21,9 @@
             </a>
           </div>
             <div class="saloon__form_block service__saloons">
+              <div class="contacts__form_inputBlock">
+                <input type="text" name="tel" class="contacts__form_iunput" placeholder="+7(999)999--99-99" required>
+              </div>
               <button class="accordion">(Выберите салон)</button>
               <div class="panel">
                 {% for saloon in saloons %}
@@ -116,8 +119,6 @@
               <div class="col-md-12">
                 <button  id="btn_next" class="time__btns_next">Далее</button>
                 <button type="button" class="time__btns_home" onclick="location.href='{% url 'index' %}'">На главную</button>
-          </div>
-
               </div>
             </div>
           </div>
@@ -125,5 +126,4 @@
       </div>
     </section>
 	</form>
-
 {% endblock %}

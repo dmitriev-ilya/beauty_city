@@ -272,9 +272,8 @@ $(document).ready(function() {
 		$('#confirmModal').arcticmodal();
 		return false
 	})
-
-
-	
-
-
 })
+
+function handleNextClick() {
+	alert('Ваша заявка сохранена!');
+}
