@@ -68,20 +68,22 @@ def index(request):
 def notes(request):
     user = request.user
     if request.POST:
-        tel = request.GET.get('tel')
-        mm = request.GET.get('mm')
-        gg = request.GET.get('gg')
-        fname = request.GET.get('fname')
-        cvc = request.GET.get('cvc')
+        print(request.POST)
+        note_id = request.POST.get('note_id')
+        print(note_id)
+        tel = request.POST.get('tel')
+        mm = request.POST.get('mm')
+        gg = request.POST.get('gg')
+        fname = request.POST.get('fname')
+        cvc = request.POST.get('cvc')
         payment = Payment.objects.create(
             user=request.user,
             paid_at=timezone.now(),
             status='Оплачен'
         )
-        Note.objects.update(
-            user=user,
-            payment=payment
-        )
+        note = Note.objects.get(id=note_id)
+        note.payment = payment
+        note.save()
 
     notes = Note.objects.filter(user=user).select_related('service', 'saloon', 'payment', 'master')
     note_details = []
