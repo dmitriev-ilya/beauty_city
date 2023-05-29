@@ -253,7 +253,12 @@ $(document).ready(function() {
 	})
 	$('.payPopupOpen').click(function(e) {
 		e.preventDefault()
+		thisNote = document.getElementById('id_note')      
+    console.log(thisNote.getAttribute('value'))
+    console.log($('#paymentModal').find('.paymentPopup__form'))
+    thisPopup = $('#paymentModal').find('.paymentPopup__form_elems')
 		$('#paymentModal').arcticmodal();
+		thisPopup.append(`<input id='id_note' hidden='true' name='note_id' value='${thisNote.getAttribute('value')}' />`)
 	})
 	$('.tipsPopupOpen').click(function(e) {
 		e.preventDefault()
