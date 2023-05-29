@@ -186,7 +186,11 @@
 												<div class="notes__main_address">{{ note.notes__main_address }}</div>
 											</div>
 											{% if note.note_payment_status == 'НЕОПЛАЧЕНО' %}
-												<div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
+                        <button class="notes__footer_btn payPopupOpen">
+                          <input id="id_note" hidden="true" name="note_id" value="{{ note.note_id }}" />
+                          Оплатить
+                        </button>
+                        <div class="notes__main_pay unPaid">НЕОПЛАЧЕНО</div>
 											{% else %}
 												<div class="notes__main_pay payid">ОПЛАЧЕНО</div>
 											{% endif %}
