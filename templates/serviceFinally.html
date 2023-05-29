@@ -32,7 +32,11 @@
 									</div>
 									<div class="serviceFinally__form_content__block fic">
 										<div class="serviceFinally__form_content__items fic">
-										  	<img src="img/masters/avatar/vizajist1.svg" alt="avatar" class="accordion__block_img">
+                      {% if master.avatar %}
+                        <img src="{{ master.avatar.url }}" alt="avatar" class="accordion__block_img">
+                      {% else %}
+										  	<img src="" alt="avatar" class="accordion__block_img">
+                      {% endif %}
                         <div class="accordion__block_master">{{ master.full_name }}</div>
 									    </div>
 									    <div class="serviceFinally__form_content__item fic">
@@ -49,7 +53,7 @@
 									<span class="contacts__form_checkboxBlock__intro">Я согласен(а) с политикой конфиденциальности</span>
 								</div>
                 <button type="submit" class="serviceFinallys__form_btn">Записаться</button>
-                <a href="{% url 'index' %}" ><button class="serviceFinallys__form_back">Назад</button></a>
+                <button type="button" class="serviceFinallys__form_back" onclick="location.href='{% url 'service' %}'">Назад</button>
 							</div>
 						</form>	
 					</div>
