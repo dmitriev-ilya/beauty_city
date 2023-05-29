@@ -4,6 +4,9 @@ import random
 from .send_sms import send_auth_sms
 from beauty_city.settings import SMS_KEY
 
+from beautyapp.models import Note
+from django.db.models import Sum
+
 from django.shortcuts import render, redirect
 from django.contrib.auth.decorators import user_passes_test
 from django.contrib.auth import authenticate, login, logout
@@ -55,4 +58,11 @@ def is_employee(user):
 
 @user_passes_test(is_employee)
 def employee_view(request):
-    return render(request, 'manager.html')
+    user_count = Note.objects.values('user').distinct().count()
+    total_price = Note.objects.filter(payment__isnull=False).aggregate(Sum('price'))['price__sum']
+    print(user_count, total_price)
+    context = {
+        'user_count': user_count,
+        'total_price': total_price,
+    }
+    return render(request, 'manager.html', context)
