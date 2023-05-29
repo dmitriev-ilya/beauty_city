@@ -14,6 +14,7 @@ from django.views.decorators.csrf import csrf_exempt
 from django.http import JsonResponse
 from beautyapp.models import User
 from django.contrib.auth.hashers import make_password
+from django.utils import timezone
 
 
 @csrf_exempt
@@ -58,11 +59,22 @@ def is_employee(user):
 
 @user_passes_test(is_employee)
 def employee_view(request):
-    user_count = Note.objects.values('user').distinct().count()
-    total_price = Note.objects.filter(payment__isnull=False).aggregate(Sum('price'))['price__sum']
-    print(user_count, total_price)
+    notes = Note.objects.all()
+    total_notes_count = notes.count()
+    month_notes_count = notes.filter(created_at__month=timezone.now().month).count()
+    month_paid_orders_price = notes.filter(
+        payment__isnull=False,
+        created_at__month=timezone.now().month
+    ).aggregate(Sum('price'))['price__sum']
+    month_orders_price = notes.filter(created_at__month=timezone.now().month).aggregate(Sum('price'))['price__sum']
+    paid_orders_share = round((month_paid_orders_price / month_orders_price) * 100, 0)
+    total_payment_balance = notes.filter(payment__isnull=True).aggregate(Sum('price'))['price__sum']
+
     context = {
-        'user_count': user_count,
-        'total_price': total_price,
+        'total_notes_count': total_notes_count,
+        'month_notes_count': month_notes_count,
+        'total_price': month_paid_orders_price,
+        'paid_orders_share': paid_orders_share,
+        'total_payment_balance': total_payment_balance
     }
     return render(request, 'manager.html', context)
