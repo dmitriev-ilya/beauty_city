@@ -125,7 +125,24 @@ $(document).ready(function() {
 		$('#mobMenu').hide()
 	})
 
-	new AirDatepicker('#datepickerHere')
+  new AirDatepicker('#datepicker', {
+    navTitles: {
+        days(dp) {
+            if (dp.selectedDates) {
+                let date = dp.selectedDates[0];
+              return `
+                  <p>${dp.formatDate(date, 'dd-MM-yyyy')}</p>
+                  <input hidden=true id='choisen_date'
+                  name="date" value='${dp.formatDate(date, 'yyyy-MM-dd')}'
+                />`;
+            }
+            
+            return 'Choose date';
+        }
+    }
+  })
+
+
 
 	var acc = document.getElementsByClassName("accordion");
 	var i;
@@ -218,24 +235,10 @@ $(document).ready(function() {
 		} 
 	})
 
-	
-	$('.air-datepicker .air-datepicker--content .air-datepicker-body .air-datepicker-body--cells .air-datepicker-cell').click(function(e) {
-		thisDate = (this.getAttribute('data-year') + '-' + this.getAttribute('data-month')+ '-' + this.getAttribute('data-date'))
-	
-		console.log(thisDate)
-	
-		if (((document.querySelectorAll('[id=input_date]')).length) > 1)  {
-			document.getElementById('input_date').remove()
-		} 
-		$(this).append(`<input id='input_date' hidden='true' name='date' value='${thisDate}' />`)
-	})
-
-
 	$(document).on('click',  function() {
     if($('.time__items .time__elems_elem .time__elems_btn').hasClass('active') && $('.service__masters > button').hasClass('selected') && $('.service__services > button').hasClass('selected')&& $('.service__saloons > button').hasClass('selected')) {
 			$('.time__btns_next').addClass('active')
 		  thisButtons = document.getElementById('btns')      
-      console.log(thisButtons)
       thisButtons.removeAttribute('hidden')
 		}
 	})
